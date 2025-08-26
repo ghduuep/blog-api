@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
@@ -14,7 +13,8 @@ class PostController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(Post::all());
+        $posts = Post::all();
+        return response()->json($posts);
     }
 
     /**
@@ -46,13 +46,10 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post): JsonResponse
     {
-        if (! Gate::allows('update-post', $post)) {
-            abort(403);
-        }
-
         $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'body' => 'required|string',
+            'title' => 'sometimes|string|max:255',
+            'content' => 'sometimes|string',
+            'user_id' => 'sometimes|exists:users,id',
         ]);
 
         $post->update($validatedData);
@@ -66,7 +63,6 @@ class PostController extends Controller
     public function destroy(Post $post): JsonResponse
     {
         $post->delete();
-
         return response()->json(null, 204);
     }
 }

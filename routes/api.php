@@ -15,8 +15,10 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::resource('posts', PostController::class);
-    Route::resource('comments', CommentController::class);
+    Route::apiResources([
+        'posts' => PostController::class,
+        'comments' => CommentController::class,
+    ]);
     Route::get('users', [UserController::class, 'index']);
 });
 

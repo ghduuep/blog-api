@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $comments = Comment::all();
         return response()->json($comments);
@@ -20,12 +20,12 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
-            'post_id' => 'required|exists:posts,id',
-            'user_id' => 'required|exists:users,id',
             'body' => 'required|string',
+            'post_id' => 'required|exists:posts, id',
+            'user_id' => 'required|exists:users, id',
         ]);
 
         $comment = Comment::create($validatedData);
@@ -36,7 +36,7 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show(Comment $comment): JsonResponse
     {
         return response()->json($comment);
     }
@@ -44,14 +44,12 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment): JsonResponse
     {
-        if (! Gate::allows('update-comment', $comment)) {
-            abort(403);
-        }
-
         $validatedData = $request->validate([
-            'body' => 'required|string',
+            'body' => 'sometimes|string',
+            'post_id' => 'sometimes|exists:posts,id',
+            'user_id' => 'sometimes|exists:users,id',
         ]);
 
         $comment->update($validatedData);
@@ -62,10 +60,9 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment): JsonResponse
     {
         $comment->delete();
-
         return response()->json(null, 204);
     }
 }
