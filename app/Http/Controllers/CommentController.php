@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,13 +22,9 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreCommentRequest $request): JsonResponse
     {
-        $validatedData = $request->validate([
-            'body' => 'required|string',
-            'post_id' => 'required|exists:posts, id',
-            'user_id' => 'required|exists:users, id',
-        ]);
+        $validatedData = $request->validated();
 
         $comment = Comment::create($validatedData);
 
@@ -44,13 +42,9 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment): JsonResponse
+    public function update(UpdateCommentRequest $request, Comment $comment): JsonResponse
     {
-        $validatedData = $request->validate([
-            'body' => 'sometimes|string',
-            'post_id' => 'sometimes|exists:posts,id',
-            'user_id' => 'sometimes|exists:users,id',
-        ]);
+        $validatedData = $request->validated();
 
         $comment->update($validatedData);
 
