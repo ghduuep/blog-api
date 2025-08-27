@@ -23,8 +23,6 @@ class UpdateCommentRequest extends FormRequest
     {
         return [
             'body' => 'sometimes|string',
-            'post_id' => 'sometimes|exists:posts,id',
-            'user_id' => 'sometimes|exists:users,id',
         ];
     }
 }

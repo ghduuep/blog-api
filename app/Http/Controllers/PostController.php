@@ -25,7 +25,7 @@ class PostController extends Controller
     {
         $validatedData = $request->validated();
 
-        $post = Post::create($validatedData);
+        $post = $request->user()->posts()->create($validatedData);
 
         return response()->json($post, 201);
     }
@@ -45,6 +45,7 @@ class PostController extends Controller
     {
         $validatedData = $request->validated();
 
+        $post = $request->user()->posts()->where('id', $post->id)->firstOrFail();
         $post->update($validatedData);
 
         return response()->json($post);

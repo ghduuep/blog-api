@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::apiResources([
         'posts' => PostController::class,
         'comments' => CommentController::class,
+        'users' => UserController::class,
     ]);
-    Route::get('users', [UserController::class, 'index']);
 });
 

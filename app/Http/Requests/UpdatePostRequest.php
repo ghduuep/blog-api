@@ -24,7 +24,6 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'sometimes|string|max:255',
             'content' => 'sometimes|string',
-            'user_id' => 'sometimes|exists:users,id',
         ];
     }
 }
