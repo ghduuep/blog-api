@@ -21,4 +21,3 @@ Route::middleware('auth:sanctum')->group(function (){
         'users' => UserController::class,
     ]);
 });
-

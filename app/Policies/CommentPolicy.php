@@ -53,7 +53,7 @@ class CommentPolicy
      */
     public function restore(User $user, Comment $comment): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -61,6 +61,6 @@ class CommentPolicy
      */
     public function forceDelete(User $user, Comment $comment): bool
     {
-        return true;
+        return false;
     }
 }

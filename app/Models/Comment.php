@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
-    protected $fillable = ['body', 'post_id', 'user_id'];
+    protected $fillable = ['body'];
 
     public function post(): BelongsTo
     {
