@@ -19,18 +19,6 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreUserRequest $request): JsonResponse
-    {
-        $validatedData = $request->validated();
-
-        $user = User::create($validatedData);
-
-        return response()->json($user, 201);
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(User $user): JsonResponse
