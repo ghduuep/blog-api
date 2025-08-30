@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CommentController extends Controller
 {
@@ -15,7 +16,9 @@ class CommentController extends Controller
      */
     public function index(): JsonResponse
     {
-        $comments = Comment::all();
+        $comments = Cache::remember('comments', now()->addMinutes(60), function () {
+            return Comment::all();
+        });
         return response()->json($comments);
     }
 
@@ -36,6 +39,9 @@ class CommentController extends Controller
      */
     public function show(Comment $comment): JsonResponse
     {
+        $comment = Cache::remember("comment.{$comment->id}", now()->addMinutes(60), function () use ($comment) {
+            return $comment;
+        });
         return response()->json($comment);
     }
 

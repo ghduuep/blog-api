@@ -6,6 +6,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {
@@ -14,7 +15,9 @@ class PostController extends Controller
      */
     public function index(): JsonResponse
     {
-        $posts = Post::with('comments')->paginate(15);
+        $posts = Cache::remember('posts', now()->addMinutes(60), function () {
+            return Post::with('comments')->paginate(15);
+        });
         return response()->json($posts);
     }
 
@@ -35,6 +38,9 @@ class PostController extends Controller
      */
     public function show(Post $post): JsonResponse
     {
+        $post = Cache::remember("post.{$post->id}", now()->addMinutes(60), function () use ($post) {
+            return $post->load('comments');
+        });
         return response()->json($post);
     }
 

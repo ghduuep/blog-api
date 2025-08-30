@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -14,7 +15,9 @@ class UserController extends Controller
      */
     public function index(): JsonResponse
     {
-        $users = User::paginate(15);
+        $users = Cache::remember('users', now()->addMinutes(60), function () {
+            return User::paginate(15);
+        });
         return response()->json($users);
     }
 
@@ -23,6 +26,9 @@ class UserController extends Controller
      */
     public function show(User $user): JsonResponse
     {
+        $user = Cache::remember("user.{$user->id}", now()->addMinutes(60), function () use ($user) {
+            return $user;
+        });
         return response()->json($user);
     }
 
